@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--Added the entity Car-->
+    <changeSet id="20230910-1" author="grabowj">
+        <createTable tableName="tasks">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="reference" type="nvarchar(64)">
+                <constraints nullable="false" />
+            </column>
+            <column name="trigger_at" type="datetime">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex tableName="tasks" indexName="idx_clustered_trigger_at_id" clustered="true">
+            <column name="trigger_at"/>
+            <column name="id"/>
+        </createIndex>
+        <addPrimaryKey tableName="tasks" constraintName="pkey_id" columnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

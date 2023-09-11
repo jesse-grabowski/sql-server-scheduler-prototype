@@ -1,0 +1,23 @@
+apiVersion: 1
+
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
+datasources:
+  - id: 1
+    uid: bcde45f0-0008-43e5-a541-559c7cefaf6c
+    orgId: 1
+    name: Prometheus
+    type: prometheus
+    typeName: Prometheus
+    typeLogoUrl: public/app/plugins/datasource/prometheus/img/prometheus_logo.svg
+    access: proxy
+    url: http://host.docker.internal:9090
+    user: ''
+    database: ''
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      httpMethod: POST
+    readOnly: false

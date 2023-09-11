@@ -1,0 +1,24 @@
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    password: qzpKmbjsVw2FsWSqQ468UCM4NoZuvNPk
+    url: jdbc:sqlserver://localhost:1433;databaseName=master;trustServerCertificate=true
+    user: sa
+  r2dbc:
+    url: r2dbc:mssql://localhost:1433/master?trustServerCertificate=true
+    username: sa
+    password: qzpKmbjsVw2FsWSqQ468UCM4NoZuvNPk
+    pool:
+      max-size: 100
+      initial-size: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+#logging:
+#  level:
+#    org.springframework.data.r2dbc: debug
+#    org.springframework.r2dbc: debug
