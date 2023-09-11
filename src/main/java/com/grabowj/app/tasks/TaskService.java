@@ -16,6 +16,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 @Service
@@ -29,17 +30,14 @@ public class TaskService {
 
     @PostConstruct
     public void start() {
-        Flux.generate(sink -> sink.next(1))
-                .flatMap(signal -> taskDao.dequeueTaskIfAvailable()
-                                .flatMap(task -> executeTask(task).onErrorResume(
-                                        Predicate.not(R2dbcNonTransientException.class::isInstance),
-                                        e -> scheduleTasks(List.of(new TaskDefinition(task.reference(), 10000)))
-                                                .thenReturn(Task.EMPTY)))
-                                .as(TransactionalOperator.create(reactiveTransactionManager)::transactional)
-                                .switchIfEmpty(Mono.just(Task.EMPTY))
-                                .onErrorReturn(Task.EMPTY)
-                        )
-                .publishOn(Schedulers.newSingle("subscriber"))
+        Flux.<Task>create(sink -> new TaskGenerator(sink, signal -> taskDao.dequeueTaskIfAvailable()
+                .flatMap(task -> executeTask(task).onErrorResume(
+                        Predicate.not(R2dbcNonTransientException.class::isInstance),
+                        e -> scheduleTasks(List.of(new TaskDefinition(task.reference(), 10000)))
+                                .thenReturn(Task.EMPTY)))
+                .as(TransactionalOperator.create(reactiveTransactionManager)::transactional)
+                .switchIfEmpty(Mono.just(Task.EMPTY))
+                .onErrorReturn(Task.EMPTY)))
                 .subscribe(taskSubscriber);
     }
 
