@@ -11,9 +11,4 @@ scrape_configs:
     scrape_interval: 1s
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8080']
-remote_write:
-  - url: 'http://host.docker.internal:3000/api/prom/push'
-    basic_auth:
-      username: 'admin'
-      password: 'admin'
+      - targets: ['host.docker.internal:8080', 'app-2:8080', 'app-3:8080', 'app-4:8080']

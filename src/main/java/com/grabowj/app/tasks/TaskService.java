@@ -16,6 +16,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
@@ -47,7 +48,11 @@ public class TaskService {
     }
 
     private Mono<Task> executeTask(Task task) {
-        return Mono.just(task).delayElement(Duration.ofMillis(200));
+//        if (ThreadLocalRandom.current().nextInt(10) > 8) {
+//            return Mono.error(new RuntimeException());
+//        } else {
+            return Mono.just(task);
+//        }
     }
 
 

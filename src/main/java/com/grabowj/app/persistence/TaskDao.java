@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -40,7 +41,8 @@ public class TaskDao {
                     WHERE trigger_at < GETUTCDATE();
                 """)
                 .map(MAPPING_FUNCTION)
-                .one();
+                .one()
+                .timeout(Duration.ofSeconds(5));
     }
 
     @Timed(value = "enqueue_task")
@@ -55,6 +57,7 @@ public class TaskDao {
                         .bind("delayInMilliseconds", task.delayInMilliseconds())
                         .add());
             return Flux.from(statement.execute());
-        }).then().doOnSuccess(v -> Metrics.counter("task_scheduled").increment(tasks.size()));
+        }).then().doOnSuccess(v -> Metrics.counter("task_scheduled").increment(tasks.size()))
+                .timeout(Duration.ofSeconds(5));
     }
 }

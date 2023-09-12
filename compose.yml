@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+  database:
+    extends:
+      file: compose-infrastructure.yml
+      service: database
+  prometheus:
+    extends:
+      file: compose-infrastructure.yml
+      service: prometheus
+  grafana:
+    extends:
+      file: compose-infrastructure.yml
+      service: grafana
+  app-1:
+    container_name: app-1
+    ports:
+      - '8080:8080'
+    extends:
+      file: compose-app.yml
+      service: app
+    labels:
+      org.springframework.boot.ignore: true
+    depends_on:
+      - 'database'
+  app-2:
+    container_name: app-2
+    extends:
+      file: compose-app.yml
+      service: app
+    labels:
+      org.springframework.boot.ignore: true
+    depends_on:
+      - 'database'
+  app-3:
+    container_name: app-3
+    extends:
+      file: compose-app.yml
+      service: app
+    labels:
+      org.springframework.boot.ignore: true
+    depends_on:
+      - 'database'
+  app-4:
+    container_name: app-4
+    extends:
+      file: compose-app.yml
+      service: app
+    labels:
+      org.springframework.boot.ignore: true
+    depends_on:
+      - 'database'

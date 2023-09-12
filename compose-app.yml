@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  app:
+    image: 'jessegrabowski/sql-server-scheduler-test'
+    environment:
+      - 'SPRING_LIQUIBASE_URL=jdbc:sqlserver://database:1433;databaseName=master;trustServerCertificate=true'
+      - 'SPRING_LIQUIBASE_USER=sa'
+      - 'SPRING_LIQUIBASE_PASSWORD=qzpKmbjsVw2FsWSqQ468UCM4NoZuvNPk'
+      - 'SPRING_R2DBC_URL=r2dbc:mssql://database:1433/master?trustServerCertificate=true'
+      - 'SPRING_R2DBC_USERNAME=sa'
+      - 'SPRING_R2DBC_PASSWORD=qzpKmbjsVw2FsWSqQ468UCM4NoZuvNPk'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '1G'

@@ -26,8 +26,8 @@ public class TaskController {
     public Mono<ResponseEntity<Void>> scheduleTasks(@RequestParam("count") int count, @RequestParam("delay") long delay) {
         return Flux.range(0, count)
                 .map(i -> new TaskDefinition(UUID.randomUUID().toString(), delay))
-                .window(100)
-                .flatMap(flux -> flux.collectList().flatMap(taskService::scheduleTasks))
+                .window(200)
+                .flatMap(flux -> flux.collectList().flatMap(taskService::scheduleTasks), 10)
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 

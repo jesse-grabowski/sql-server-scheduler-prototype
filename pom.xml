@@ -103,6 +103,13 @@
             <version>${reactive-streams.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- development-only -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

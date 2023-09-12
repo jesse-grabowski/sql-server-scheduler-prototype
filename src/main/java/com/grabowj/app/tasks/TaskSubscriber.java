@@ -35,7 +35,7 @@ public class TaskSubscriber implements Subscriber<Task>, Disposable {
 
     private Subscription subscription;
 
-    public TaskSubscriber(@Value("${app.scheduler.maximum-demand:55}") long maximumDemand) {
+    public TaskSubscriber(@Value("${app.scheduler.maximum-demand:89}") long maximumDemand) {
         this.isDisposed = false;
         this.inFlightRequests = new AtomicLong();
         this.desiredDemandIndex = 0;

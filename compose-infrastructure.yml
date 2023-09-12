@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  database:
+    image: 'mcr.microsoft.com/mssql/server:2022-latest'
+    container_name: 'sql-server'
+    ports:
+      - '1433:1433'
+    environment:
+      - 'ACCEPT_EULA=Y'
+      - 'MSSQL_SA_PASSWORD=qzpKmbjsVw2FsWSqQ468UCM4NoZuvNPk'
+  prometheus:
+    image: 'prom/prometheus'
+    container_name: 'prometheus'
+    ports:
+      - '9090:9090'
+    volumes:
+      - '${PWD}/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '512M'
+  grafana:
+    image: 'grafana/grafana'
+    container_name: 'grafana'
+    ports:
+      - '3000:3000'
+    volumes:
+      - '${PWD}/monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/automatic.yml'
+      - '${PWD}/monitoring/grafana-dashboard-scheduler.json:/etc/dashboards/scheduler/scheduler_dashboard.json'
+      - '${PWD}/monitoring/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/automatic.yml'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '512M'
