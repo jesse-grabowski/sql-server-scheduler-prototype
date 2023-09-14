@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * minimizing unprocessed requests.
  */
 @Slf4j
-@Component
 @DependsOn({"r2dbcDatabaseClient", TaskDao.BEAN_NAME})
 public class TaskSubscriber implements Subscriber<Task>, Disposable {
 
@@ -106,30 +105,10 @@ public class TaskSubscriber implements Subscriber<Task>, Disposable {
     }
 
     @Override
-    @PreDestroy
     public void dispose() {
-        // signal to stop requesting more tasks
         this.isDisposed = true;
-        // busy wait until all in-flight tasks complete
-        long timestamp = System.currentTimeMillis();
-        while (inFlightRequests.get() > 0 && System.currentTimeMillis() - timestamp < 1000) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
-        // cancel subscription
         if (subscription != null) {
             subscription.cancel();
-        }
-        // wait briefly for connection pool to drain
-        // I don't actually know why this is required
-        // but it prevents a flood of exceptions
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            log.warn("TaskSubscriber shutdown interrupted", e);
         }
     }
 
